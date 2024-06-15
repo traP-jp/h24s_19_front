@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router';
-import api, {PostRoom} from '../lib/apis'
-const router = useRouter()
+import api, {PostRoom} from '@/lib/apis'
+import router from '@/router';
 
 // 部屋を作る
 // 必須: 部屋の名前, open/private 選択
