@@ -32,6 +32,7 @@ module.exports = {
         semi: false,
       },
     ],
+    'no-case-declarations': 'off',
   },
   parser: 'vue-eslint-parser',
   parserOptions: {

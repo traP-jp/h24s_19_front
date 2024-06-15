@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
+    "build:prod": "export NODE_ENV=production && vue-tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext .js,.ts,.vue",
     "gen-api": "node ./scripts/gen-api.js",
