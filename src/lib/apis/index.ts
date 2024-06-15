@@ -6,7 +6,7 @@ const api = new Apis(
       import.meta.env.MODE === 'production'
         ? 'https://trap.show/h24s_19_server'
         : 'http://localhost:3000',
-  })
+  }),
 )
 
 export default api
