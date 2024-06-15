@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
+const router = useRouter()
 // 部屋を作る
 // 必須: 部屋の名前, open/private 選択
 // private -> passwordも必要
@@ -9,6 +11,7 @@ const isPublic=ref(true)
 const roomName=ref('')
 const roomPassrowd=ref('')
 const errorMsg=ref('')
+
 const submit = ()=>  {
   if(roomName.value==''){
     errorMsg.value="部屋名を設定してください"
@@ -24,13 +27,12 @@ const submit = ()=>  {
       "password": roomPassrowd.value
     })
     // res,err =post(url,body)
-    const roomId="" 
-    this.$router.push(
-      {path:"rooms/${roomId}/enter",query:{password : roomPassrowd.value}}
+    const roomId="xxxx"
+    router.push(
+      {path:`/rooms/${roomId}`,query:{password : roomPassrowd.value}}
     )
   }
 }
-
 </script>
 
 <template>
@@ -51,7 +53,7 @@ const submit = ()=>  {
   <div>
     <h2>現在の設定</h2>
     <p>部屋名: {{ roomName }}</p>
-    <p>部屋を全体公開 
+    <p>部屋を全体公開
       <span v-if="isPublic">する</span>
       <span v-else>しない</span>
   </p>
