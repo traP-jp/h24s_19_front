@@ -1,45 +1,65 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import router from '../router';
+// 部屋を作る
+// 必須: 部屋の名前, open/private 選択
+// private -> passwordも必要
 
-defineProps<{ msg: string }>()
+const baseUrl=''
+const isPublic=ref(true)
+const roomName=ref('')
+const roomPassrowd=ref('')
+const errorMsg=ref('')
+function submit() {
+  if(roomName.value==''){
+    errorMsg.value="部屋名を設定してください"
+  }else if(!isPublic.value && !roomPassrowd.value){
+    errorMsg.value="合言葉を設定してください"
+  }else{
+    // 全ての設定がOK
+    errorMsg.value=''
+    const url=baseUrl+"/api/room"
+    const roominfo=JSON.stringify({
+      "isPublic": isPublic.value,
+      "name": roomName.value,
+      "password": roomPassrowd.value
+    })
+    // post(url,body)
+    // const roomId=""
+    // $router.push("room/"+roomId)
+  }
+}
 
-const count = ref(0)
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
-
-  <div class="card">
-    <button
-      type="button"
-      @click="count++"
-    >
-      count is {{ count }}
-    </button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
+  <h1 id="title">部屋を作る</h1>
+  <label> 部屋を全体公開する
+  <input type="checkbox" v-model="isPublic">
+  </label>
+  <label>
+    <p>部屋名
+      <input type="text" v-model="roomName">
     </p>
+  </label>
+  <label v-if="!isPublic">
+    <p>合言葉
+      <input type="text" v-model="roomPassrowd">
+    </p>
+  </label>
+  <div>
+    <h2>現在の設定</h2>
+    <p>部屋名: {{ roomName }}</p>
+    <p>部屋を全体公開 
+      <span v-if="isPublic">する</span>
+      <span v-else>しない</span>
+  </p>
+    <p v-if="!isPublic">合言葉: {{ roomPassrowd }}</p>
   </div>
-
-  <p>
-    Check out
-    <a
-      href="https://vuejs.org/guide/quick-start.html#local"
-      target="_blank"
-    >create-vue</a>, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a
-      href="https://github.com/vuejs/language-tools"
-      target="_blank"
-    >Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">
-    Click on the Vite and Vue logos to learn more
-  </p>
+  <button @click="submit()">作成する</button>
+  <div class="errorMsg">
+    {{ errorMsg }}
+  </div>
 </template>
 
 <style scoped>
