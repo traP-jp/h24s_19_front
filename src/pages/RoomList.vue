@@ -1,49 +1,64 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { stringifyQuery } from 'vue-router';
+import api,{GetRoomsInner,EnterRoom,EnterRoomSuccess} from '@/lib/apis'
 
-defineProps<{ msg: string }>()
+const rooms =ref<GetRoomsInner[]>([])
+const selectedRoomId = ref("")
+const isSelectedRoomPublic = ref(true)
+const userName = ref("")
+const password = ref("")
+const isRoomSelected=ref(false)
 
-const count = ref(0)
+onMounted(async () => {
+  const res = await api.apiRoomsGet()
+    rooms.value = res.data
+})
+function AskNames(roomId: string, isPublic: boolean){
+  selectedRoomId.value = roomId
+  isSelectedRoomPublic.value = isPublic
+  isRoomSelected.value = true
+}
+const user = ref<EnterRoomSuccess>({userId: "",userName: "" })
+function EnterSelectedRoom(roomId: string){
+  const data = ref<EnterRoom>({userName:userName.value,password: password.value})
+  
+  onMounted(async () => {
+    const res = await api.apiRoomRoomIdEnterPost(roomId,data.value)
+      user.value = res.data
+      //IndividualRoomにuser送る？？？？？
+  })
+}
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
-
-  <div class="card">
-    <button
-      type="button"
-      @click="count++"
-    >
-      count is {{ count }}
-    </button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
+  <div v-if="!isRoomSelected">
+    <div v-for="room in rooms" :key="room.roomId">
+      <div v-if="room.roomId && typeof(room.isPublic) =='boolean'" class="roomListForms">
+        <button @click="AskNames(room.roomId,room.isPublic)">{{room.isPublic}}, {{ room.roomName }}, {{ room.userCount }}人参加中</button>
+      </div>
+    </div>
   </div>
-
-  <p>
-    Check out
-    <a
-      href="https://vuejs.org/guide/quick-start.html#local"
-      target="_blank"
-    >create-vue</a>, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a
-      href="https://github.com/vuejs/language-tools"
-      target="_blank"
-    >Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">
-    Click on the Vite and Vue logos to learn more
-  </p>
+  <div v-if="isRoomSelected">
+    <label class="roomListForms">
+      handle name
+      <input v-model="userName" />
+    </label>
+    <br>
+    <label v-if="!isSelectedRoomPublic" class="roomListForms">
+      password
+      <input v-model="password" />
+    </label>
+    <br>
+    <button @click="EnterSelectedRoom(selectedRoomId)" class="roomListForms">ルームに入る</button>
+  </div>
 </template>
 
 <style scoped>
 .read-the-docs {
   color: #888;
+}
+.roomListForms{
+  margin:10px
 }
 </style>
