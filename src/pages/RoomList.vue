@@ -13,7 +13,7 @@ onMounted(async () => {
   <div>
     <div v-for="room in rooms" :key="room.roomId">
       <div
-        v-if="room.roomId && typeof(room.isPublic) == 'boolean'"
+        v-if="room.roomId && typeof room.isPublic == 'boolean'"
         class="roomListForms"
       >
         <!-- 下のpathは選択した部屋に入るページに飛ぶようにする -->
