@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint src --ext .js,.ts,.vue",
     "gen-api": "node ./scripts/gen-api.js",
-    "with-mock": "concurrently \"prism mock -p 3000 -d https://raw.githubusercontent.com/traP-jp/h24s_19_server/main/swagger.yaml\" \"vite\""
+    "with-mock": "concurrently \"prism mock -p 3000 -d https://raw.githubusercontent.com/traP-jp/h24s_19_server/main/swagger.yaml\" \"vite\"",
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "pinia": "^2.1.7",
