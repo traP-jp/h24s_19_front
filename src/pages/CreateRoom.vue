@@ -38,30 +38,46 @@ const submit = ()=>  {
 </script>
 
 <template>
-  <h1 id="title">部屋を作る</h1>
+  <h1 id="title">
+    部屋を作る
+  </h1>
   <label> 部屋を全体公開する
-  <input type="checkbox" v-model="isPublic">
+    <input
+      v-model="isPublic"
+      type="checkbox"
+    >
   </label>
   <label>
     <p>部屋名
-      <input type="text" v-model="newRoomName">
+      <input
+        v-model="newRoomName"
+        type="text"
+      >
     </p>
   </label>
   <label v-if="!isPublic">
     <p>合言葉
-      <input type="text" v-model="roomPassword">
+      <input
+        v-model="roomPassword"
+        type="text"
+      >
     </p>
   </label>
   <div>
     <h2>現在の設定</h2>
     <p>部屋名: {{ newRoomName }}</p>
-    <p>部屋を全体公開
+    <p>
+      部屋を全体公開
       <span v-if="isPublic">する</span>
       <span v-else>しない</span>
-  </p>
-    <p v-if="!isPublic">合言葉: {{ roomPassword }}</p>
+    </p>
+    <p v-if="!isPublic">
+      合言葉: {{ roomPassword }}
+    </p>
   </div>
-  <button @click="submit()">作成する</button>
+  <button @click="submit()">
+    作成する
+  </button>
   <div class="err">
     {{ errorMsg }}
   </div>
