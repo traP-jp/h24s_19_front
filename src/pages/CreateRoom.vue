@@ -8,48 +8,31 @@ import router from '@/router';
 // private -> passwordも必要
 const isPublic=ref(true)
 const newRoomName=ref('')
-const roomPassrowd=ref('')
+const roomPassword=ref('')
 const errorMsg=ref('')
 
 const submit = ()=>  {
   if(newRoomName.value==''){
     errorMsg.value="部屋名を設定してください"
-  }else if(!isPublic.value && !roomPassrowd.value){
+  }else if(!isPublic.value && !roomPassword.value){
     errorMsg.value="合言葉を設定してください"
   }else{
     // 全ての設定がOK
     errorMsg.value=''
-    if(isPublic.value){
-      const roomInfo:PostRoom={
-        "isPublic": isPublic.value,
-        "roomName": newRoomName.value,
-      }
-      const resp=api.apiRoomPost(roomInfo)
-      resp.then(
-        (val) => {
-          const roomId=val.data.roomId
-          router.push(
-            {path:`/rooms/${roomId}`}
-          )
-        }
-      )
-    }else{
-      const roomInfo:PostRoom={
-        "isPublic": isPublic.value,
-        "roomName": newRoomName.value,
-        "password": roomPassrowd.value
-      }
-      const resp=api.apiRoomPost(roomInfo)
-      resp.then(
-        (val) => {
-          const roomId=val.data.roomId
-          router.push(
-            {path:`/rooms/${roomId}`,query:{password : roomPassrowd.value}}
-          )
-        }
-      )
+    const roomInfo:PostRoom={
+      "isPublic": isPublic.value,
+      "roomName": newRoomName.value,
+      "password": roomPassword.value
     }
-    
+    const resp=api.apiRoomPost(roomInfo)
+    resp.then(
+      (val) => {
+        const roomId=val.data.roomId
+        router.push(
+          {path:`/rooms/${roomId}`,query:{password:roomPassword.value}}
+        )
+      }
+    )
   }
 }
 </script>
@@ -66,7 +49,7 @@ const submit = ()=>  {
   </label>
   <label v-if="!isPublic">
     <p>合言葉
-      <input type="text" v-model="roomPassrowd">
+      <input type="text" v-model="roomPassword">
     </p>
   </label>
   <div>
@@ -76,7 +59,7 @@ const submit = ()=>  {
       <span v-if="isPublic">する</span>
       <span v-else>しない</span>
   </p>
-    <p v-if="!isPublic">合言葉: {{ roomPassrowd }}</p>
+    <p v-if="!isPublic">合言葉: {{ roomPassword }}</p>
   </div>
   <button @click="submit()">作成する</button>
   <div class="err">
