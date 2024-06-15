@@ -4,29 +4,29 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: import('@/pages/HomePage.vue'),
+    component: () => import('@/pages/HomePage.vue'),
   },
   {
     path: '/rooms',
     name: 'Rooms',
-    component: import('@/pages/RoomList.vue'),
+    component: () => import('@/pages/RoomList.vue'),
   },
   {
     path: '/rooms/:id',
     name: 'IndividualRoom',
-    component: import('@/pages/IndividualRoom.vue'),
+    component: () => import('@/pages/IndividualRoom.vue'),
   },
   {
     path: '/rooms/create',
     name: 'CreateRoom',
-    component: import('@/pages/CreateRoom.vue'),
+    component: () => import('@/pages/CreateRoom.vue'),
   },
   {
     // 404 page
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: import('@/pages/NotFound.vue'),
-  }
+    component: () => import('@/pages/NotFound.vue'),
+  },
 ]
 
 const router = createRouter({
