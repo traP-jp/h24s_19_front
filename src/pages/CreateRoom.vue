@@ -1,36 +1,56 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
+import api, {PostRoom} from '../lib/apis'
 const router = useRouter()
+
 // 部屋を作る
 // 必須: 部屋の名前, open/private 選択
 // private -> passwordも必要
-
-const baseUrl=''
 const isPublic=ref(true)
-const roomName=ref('')
+const newRoomName=ref('')
 const roomPassrowd=ref('')
 const errorMsg=ref('')
 
 const submit = ()=>  {
-  if(roomName.value==''){
+  if(newRoomName.value==''){
     errorMsg.value="部屋名を設定してください"
   }else if(!isPublic.value && !roomPassrowd.value){
     errorMsg.value="合言葉を設定してください"
   }else{
     // 全ての設定がOK
     errorMsg.value=''
-    const url=baseUrl+"/api/room"
-    const roominfo=JSON.stringify({
-      "isPublic": isPublic.value,
-      "name": roomName.value,
-      "password": roomPassrowd.value
-    })
-    // res,err =post(url,body)
-    const roomId="xxxx"
-    router.push(
-      {path:`/rooms/${roomId}`,query:{password : roomPassrowd.value}}
-    )
+    if(isPublic.value){
+      const roomInfo:PostRoom={
+        "isPublic": isPublic.value,
+        "roomName": newRoomName.value,
+      }
+      const resp=api.apiRoomPost(roomInfo)
+      resp.then(
+        (val) => {
+          const roomId=val.data.roomId
+          router.push(
+            {path:`/rooms/${roomId}`}
+          )
+        }
+      )
+    }else{
+      const roomInfo:PostRoom={
+        "isPublic": isPublic.value,
+        "roomName": newRoomName.value,
+        "password": roomPassrowd.value
+      }
+      const resp=api.apiRoomPost(roomInfo)
+      resp.then(
+        (val) => {
+          const roomId=val.data.roomId
+          router.push(
+            {path:`/rooms/${roomId}`,query:{password : roomPassrowd.value}}
+          )
+        }
+      )
+    }
+    
   }
 }
 </script>
@@ -42,7 +62,7 @@ const submit = ()=>  {
   </label>
   <label>
     <p>部屋名
-      <input type="text" v-model="roomName">
+      <input type="text" v-model="newRoomName">
     </p>
   </label>
   <label v-if="!isPublic">
@@ -52,7 +72,7 @@ const submit = ()=>  {
   </label>
   <div>
     <h2>現在の設定</h2>
-    <p>部屋名: {{ roomName }}</p>
+    <p>部屋名: {{ newRoomName }}</p>
     <p>部屋を全体公開
       <span v-if="isPublic">する</span>
       <span v-else>しない</span>
