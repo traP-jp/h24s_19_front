@@ -25,7 +25,9 @@ const submit = ()=>  {
     })
     // res,err =post(url,body)
     const roomId="" 
-    this.$router.push({path:"room/${roomId}"})
+    this.$router.push(
+      {path:"rooms/${roomId}/enter",query:{password : roomPassrowd.value}}
+    )
   }
 }
 
