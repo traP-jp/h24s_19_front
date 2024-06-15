@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import api,{GetRoomsInner,EnterRoom,EnterRoomSuccess} from '../lib/apis'
+import api,{GetRoomsInner,EnterRoom,EnterRoomSuccess} from '@/lib/apis'
 import { useStoreUser } from '@/stores/user';
 
 const User = useStoreUser();
@@ -16,7 +16,7 @@ onMounted(async () => {
   const res = await api.apiRoomsGet()
     rooms.value = res.data
 })
-function BackSelectPage(roomName: string,roomId: string, isPublic: boolean){
+function BackSelectPage(){
   selectedRoomName.value = ""
   selectedRoomId.value = ""
   isSelectedRoomPublic.value = true
