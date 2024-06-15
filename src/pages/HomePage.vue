@@ -1,20 +1,15 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-
-defineProps<{ msg: string }>()
-
-const count = ref(0)
-</script>
-
 <template>
   <div>
-    <router-link to="/rooms">ルームを探す</router-link>　
-    <router-link to="/rooms/create">ルームを作成</router-link>
+    <button @click="() => $router.push({ path: '/rooms' })" class="changePageButton">ルームを探す</button>
+    <button @click="() => $router.push({ path: '/rooms/create' })"  class="changePageButton">ルームを作成</button>
   </div>
 </template>
 
 <style scoped>
 .read-the-docs {
   color: #888;
+}
+.changePageButton{
+  margin:10px;
 }
 </style>
