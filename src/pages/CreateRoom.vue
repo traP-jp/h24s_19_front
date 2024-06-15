@@ -11,7 +11,7 @@ const newRoomName=ref('')
 const roomPassword=ref('')
 const errorMsg=ref('')
 
-const submit = ()=>  {
+const submit = async ()=>  {
   if(newRoomName.value==''){
     errorMsg.value="部屋名を設定してください"
   }else if(!isPublic.value && !roomPassword.value){
@@ -24,15 +24,15 @@ const submit = ()=>  {
       "roomName": newRoomName.value,
       "password": roomPassword.value
     }
-    const resp=api.apiRoomPost(roomInfo)
-    resp.then(
-      (val) => {
-        const roomId=val.data.roomId
-        router.push(
-          {path:`/rooms/${roomId}`,query:{password:roomPassword.value}}
-        )
-      }
-    )
+    try{
+      const resp = await api.apiRoomPost(roomInfo)
+      const roomId = resp.data.roomId
+      router.push(
+        {path: `/rooms/${roomId}`,query: {password:roomPassword.value}}
+      )
+    }catch(e){
+      console.error(e)
+    }
   }
 }
 </script>
