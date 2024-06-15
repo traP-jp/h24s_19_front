@@ -1,0 +1,39 @@
+import { execa } from 'execa'
+import fs from 'fs/promises'
+import path from 'path'
+
+import { addApis } from './add-apis.js'
+
+import { fileURLToPath } from 'url'
+
+const SWAGGER_PATH =
+  'https://raw.githubusercontent.com/traP-jp/h24s_19_server/main/swagger.yaml'
+const GENERATED_DIR = 'src/lib/apis/generated'
+
+const generateCmd = [
+  'openapi-generator-cli',
+  'generate',
+  '-g',
+  'typescript-axios',
+  '-i',
+  SWAGGER_PATH,
+  '-o',
+  GENERATED_DIR
+]
+
+const __filename = fileURLToPath(import.meta.url)
+
+const __dirname = path.dirname(__filename)
+
+;(async () => {
+  await fs.mkdir(path.resolve(__dirname, '../', GENERATED_DIR), {
+    recursive: true
+  })
+
+  const p = execa('npx', generateCmd)
+  p.stdout?.pipe(process.stdout)
+  await p
+
+  // generate Apis class
+  await addApis(GENERATED_DIR)
+})()

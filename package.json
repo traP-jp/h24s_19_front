@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "gen-api": "node ./scripts/gen-api.js",
+    "with-mock": "concurrently \"prism mock -p 3000 -d https://raw.githubusercontent.com/traP-jp/h24s_19_server/main/swagger.yaml\" \"vite\""
   },
   "dependencies": {
     "pinia": "^2.1.7",
@@ -16,9 +18,14 @@
   },
   "devDependencies": {
     "@eslint/js": "^8.57.0",
+    "@openapitools/openapi-generator-cli": "^2.13.4",
+    "@stoplight/prism-cli": "^5.8.1",
     "@vitejs/plugin-vue": "^5.0.4",
+    "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.26.0",
+    "execa": "^9.2.0",
+    "ts-morph": "^22.0.0",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.13.0",
     "vite": "^5.2.0",
