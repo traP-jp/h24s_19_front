@@ -3,8 +3,8 @@ import { ref, onMounted } from 'vue'
 import api, { EnterRoom } from '@/lib/apis'
 import router from '@/router';
 
-import { userUserStore } from '@/stores/user'
-const store = userUserStore()
+import { useStoreUser } from '@/stores/user'
+const store = useStoreUser()
 // 部屋に入る前のページ
 // 必須: 名前
 // private -> 合言葉の入力欄
