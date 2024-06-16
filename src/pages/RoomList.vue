@@ -6,7 +6,9 @@ import api, { Room } from '@/lib/apis'
 const rooms = ref<Room[]>([])
 onMounted(async () => {
   const res = await api.apiRoomsGet()
-  rooms.value = res.data.rooms
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  rooms.value = res.data
 })
 
 const router = useRouter()
@@ -54,7 +56,7 @@ const enterRoom = (room: Room) => {
               />
             </div>
           </div>
-          <div class="roomListFormNum">{{ room.userCount }}人が参加中</div>
+          <!-- <div class="roomListFormNum">{{ room.userCount }}人が参加中</div> -->
         </button>
       </div>
     </div>
