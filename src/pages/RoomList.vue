@@ -6,7 +6,7 @@ import api, { GetRoomsInner } from '@/lib/apis'
 const rooms = ref<GetRoomsInner[]>([])
 onMounted(async () => {
   const res = await api.apiRoomsGet()
-  rooms.value = res.data
+  rooms.value = res.data.rooms
 })
 
 const router = useRouter()
