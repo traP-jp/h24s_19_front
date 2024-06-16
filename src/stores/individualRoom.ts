@@ -77,7 +77,11 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
 
   const connect = (roomId: string) => {
     // roomId をcookieにセット
-    document.cookie = document.cookie + `roomID=${roomId};`
+    const userId = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('userId='))
+      ?.split('=')[1]
+    document.cookie = `userId=${userId}; roomID=${roomId};`
     const ws = new WebSocket(websocketUrl())
     ws.onopen = () => {
       console.log('connected')
