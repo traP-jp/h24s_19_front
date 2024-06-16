@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import api, { GetRoomsInner } from '@/lib/apis'
 
 const rooms = ref<GetRoomsInner[]>([])
@@ -7,6 +8,15 @@ onMounted(async () => {
   const res = await api.apiRoomsGet()
   rooms.value = res.data
 })
+
+const router = useRouter()
+const enterRoom = (room: GetRoomsInner) => {
+  let query = undefined
+  if (!room.isPublic) {
+    query = { isPrivate: 1 }
+  }
+  router.push({ path: '/rooms/' + room.roomId + '/enter', query })
+}
 </script>
 
 <template>
@@ -20,7 +30,7 @@ onMounted(async () => {
         <button
           @click="
             () => {
-              $router.push({ path: '/rooms/' + room.roomId + '/enter' })
+              enterRoom(room)
             }
           "
         >
