@@ -33,6 +33,17 @@ module.exports = {
       },
     ],
     'no-case-declarations': 'off',
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        types: {
+          '{}': false,
+          Object: false,
+          Function: false,
+        },
+        extendDefaults: true,
+      },
+    ],
   },
   parser: 'vue-eslint-parser',
   parserOptions: {

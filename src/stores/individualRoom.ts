@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { useStoreUser } from './user'
 
 type IndividualRoomState =
   | {
@@ -7,16 +8,18 @@ type IndividualRoomState =
       roomId: undefined
       posts: []
       rejectedPosts: []
+      userScoreMap: {}
     }
   | {
       ws: WebSocket
       roomId: string
       posts: Post[]
       rejectedPosts: RejectedPostResponse[]
+      userScoreMap: Record<string, number>
     }
 
 interface BasicPost {
-  wordId: number
+  wordId: string
   word: string
   reading: string
   basicScore: number
@@ -43,7 +46,7 @@ interface PostedWord extends BasicPost {
 interface ScoreChangeResponse {
   // いいねや通報で得点が変動した時
   type: 'score_change'
-  wordId: number
+  wordId: string
   additionalScore: number
   basicScore: number
   totalScore: number
@@ -59,14 +62,17 @@ const BASE_URL =
 const websocketUrl = (roomId: string) => `${BASE_URL}/api/ws/${roomId}`
 
 export const useIndividualRoom = defineStore('individualRoom', () => {
-  const initialState = {
+  const initialState: IndividualRoomState = {
     ws: null,
     roomId: undefined,
     posts: [] as [],
     rejectedPosts: [] as [],
+    userScoreMap: {},
   }
 
   const state = ref<IndividualRoomState>(initialState)
+
+  const userStore = useStoreUser()
 
   const connect = (roomId: string) => {
     const ws = new WebSocket(websocketUrl(roomId))
@@ -77,6 +83,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
         roomId,
         posts: [],
         rejectedPosts: [],
+        userScoreMap: {},
       }
     }
 
@@ -100,6 +107,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
             totalScore: data.basicScore,
             isInvalid: false,
           })
+          userScoreChange(data.senderName, data.basicScore)
           break
         case 'post_word_rejected':
           state.value.rejectedPosts.push(data)
@@ -111,6 +119,9 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
           if (post === undefined) {
             throw new Error('Post not found')
           }
+
+          userScoreChange(post.senderName, data.totalScore - post.totalScore)
+
           post.additionalScore = data.additionalScore
           post.basicScore = data.basicScore
           post.totalScore = data.totalScore
@@ -138,22 +149,44 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
     )
   }
 
-  const reportPost = (wordId: number) => {
+  const reportPost = (post: Post) => {
     if (state.value.ws === null) {
       throw new Error('WebSocket is not connected')
     }
+
+    if (post.senderId === userStore.userId) {
+      return
+    }
+
     state.value.ws.send(
-      JSON.stringify({ type: 'reportWord', args: { wordId } }),
+      JSON.stringify({ type: 'reportWord', args: { wordId: post.wordId } }),
     )
   }
 
-  const goodPost = (wordId: number, score: number) => {
+  const goodPost = (post: Post, score: number) => {
     if (state.value.ws === null) {
       throw new Error('WebSocket is not connected')
     }
+
+    if (post.senderId === userStore.userId) {
+      return
+    }
+
     state.value.ws.send(
-      JSON.stringify({ type: 'goodWord', args: { wordId, score } }),
+      JSON.stringify({
+        type: 'goodWord',
+        args: { wordId: post.wordId, score },
+      }),
     )
+  }
+
+  const userScoreChange = (userName: string, score: number) => {
+    if (state.value.ws === null) {
+      throw new Error('WebSocket is not connected')
+    }
+
+    const prevScore = state.value.userScoreMap[userName] || 0
+    state.value.userScoreMap[userName] = prevScore + score
   }
 
   return {
