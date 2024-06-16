@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useIndividualRoom } from '@/stores/individualRoom'
+import { Post, useIndividualRoom } from '@/stores/individualRoom'
 import ThumbUpIcon from '@/icons/ThumbUpIcon.vue'
 import ReportIcon from '@/icons/ReportIcon.vue'
+import { useStoreUser } from '@/stores/user'
 
 const router = useRouter()
 const roomId = computed(() =>
   Array.isArray(router.currentRoute.value.params.id)
     ? router.currentRoute.value.params.id[0]
-    : router.currentRoute.value.params.id,
+    : router.currentRoute.value.params.id
 )
 
 const individualRoomStore = useIndividualRoom()
 const posts = computed(() => individualRoomStore.state.posts)
+
+const userStore = useStoreUser()
+const userId = computed(() => userStore.$state.userId)
 
 onMounted(async () => {
   try {
@@ -29,13 +33,13 @@ const postWord = () => {
   individualRoomStore.sendPost(postWordInput.value, postReadingInput.value)
 }
 
-const goodWord = (wordId: number) => {
+const goodWord = (post: Post) => {
   // TODO: デバウンス入れて連打時のリクエスト回数減らしたい
-  individualRoomStore.goodPost(wordId, 1)
+  individualRoomStore.goodPost(post, 1)
 }
 
-const reportWord = (wordId: number) => {
-  individualRoomStore.reportPost(wordId)
+const reportWord = (post: Post) => {
+  individualRoomStore.reportPost(post)
 }
 </script>
 
@@ -49,10 +53,18 @@ const reportWord = (wordId: number) => {
           <span>{{ `基礎点: ${post.basicScore}` }}</span>
           <div class="icons-container">
             <div class="thumb-container">
-              <ThumbUpIcon @click="() => goodWord(post.wordId)" />
+              <ThumbUpIcon
+                :class="{ 'icon-disabled': userId === post.senderId }"
+                :color="userId === post.senderId ? '#a8d89c' : '#24A005'"
+                @click="() => goodWord(post)"
+              />
               <span>{{ post.additionalScore }}</span>
             </div>
-            <ReportIcon @click="() => reportWord(post.wordId)" />
+            <ReportIcon
+              :class="{ 'icon-disabled': userId === post.senderId }"
+              :color="userId === post.senderId ? '#c15353' : '#FF0000'"
+              @click="() => reportWord(post)"
+            />
           </div>
         </div>
       </div>
@@ -136,6 +148,10 @@ const reportWord = (wordId: number) => {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.icon-disabled {
+  cursor: not-allowed;
 }
 
 .input-container {
