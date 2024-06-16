@@ -8,7 +8,7 @@ onMounted(async () => {
   const res = await api.apiRoomsGet()
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  rooms.value = res.data
+  rooms.value = res.data.rooms
 })
 
 const router = useRouter()
@@ -36,25 +36,14 @@ const enterRoom = (room: Room) => {
             }
           "
         >
-          <div v-if="typeof room.roomName == 'string'">
-            <div v-if="room.roomName.length <= 20" class="roomListFormName">
-              {{ room.roomName }}
-              <img
-                v-if="!room.isPublic"
-                src="@/assets/lock.svg"
-                alt="Lock SVG"
-                class="lockImg"
-              />
-            </div>
-            <div v-if="room.roomName.length > 20" class="roomListFormName">
-              {{ room.roomName.substring(0, 19) }}...
-              <img
-                v-if="!room.isPublic"
-                src="@/assets/lock.svg"
-                alt="Lock SVG"
-                class="lockImg"
-              />
-            </div>
+          <div class="roomListFormName">
+            {{ room.roomName }}
+            <img
+              v-if="!room.isPublic"
+              src="@/assets/lock.svg"
+              alt="Lock SVG"
+              class="lockImg"
+            />
           </div>
           <!-- <div class="roomListFormNum">{{ room.userCount }}人が参加中</div> -->
         </button>
@@ -69,6 +58,7 @@ const enterRoom = (room: Room) => {
 }
 .roomListContents {
   margin: 20px;
+  overflow-y: auto;
 }
 .roomListForms {
   display: flex;
@@ -82,6 +72,9 @@ const enterRoom = (room: Room) => {
 }
 .roomListFormName {
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .lockImg {
   width: 10px;
