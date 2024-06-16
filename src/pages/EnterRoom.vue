@@ -54,29 +54,71 @@ onMounted(() => {
 })
 </script>
 <template>
-  <h1>部屋に入る</h1>
-  <p>部屋ID: {{ thisRoomId }}</p>
-  <p>この部屋で使うニックネームを設定してください。</p>
-  <p>
-    <label>
-      ニックネーム
-      <input v-model="userNickName" />
-    </label>
-  </p>
-  <p v-if="isPrivate">
-    <label>
-      合言葉
-      <input v-model="roomPassword" />
-    </label>
-  </p>
-
-  <p>
-    <button @click="submit">参加</button>
-  </p>
-  <div v-if="userSettingError">
-    <p>ニックネームが使用不可能。もしくは間違った合言葉です。</p>
-  </div>
-  <div v-if="submitError">
-    <p>エラーが発生しました。操作をやり直してください。</p>
+  <div class="enterRoomContents">
+    <h2>部屋に入る</h2>
+    <p>部屋ID: {{ thisRoomId }}</p>
+    <p>この部屋で使うニックネームを設定してください。</p>
+    <table class="widthMax">
+      <label class="widthMax">
+        <tr class="widthMax">
+          <th>ニックネーム</th>
+          <td class="Td">
+            <input v-model="userNickName" class="enterRoomInputText" />
+          </td>
+        </tr>
+      </label>
+      <label v-if="isPrivate" class="widthMax">
+        <tr class="widthMax">
+          <th>合言葉</th>
+          <td class="Td">
+            <input v-model="roomPassword" class="enterRoomInputText" />
+          </td>
+        </tr>
+      </label>
+    </table>
+    <div style="text-align: right">
+      <button class="enterRoomButton" @click="submit()">作成</button>
+    </div>
+    <div v-if="userSettingError">
+      <p>ニックネームが使用不可能。もしくは間違った合言葉です。</p>
+    </div>
+    <div v-if="submitError">
+      <p>エラーが発生しました。操作をやり直してください。</p>
+    </div>
   </div>
 </template>
+<style scoped>
+.read-the-docs {
+  color: #888;
+}
+.err {
+  color: red;
+}
+.Td {
+  width: calc(100% - 70px);
+  display: inline-block;
+}
+.widthMax {
+  width: 100%;
+  display: inline-block;
+}
+.enterRoomContents {
+  margin: 20px;
+}
+.enterRoomInputCheckBox {
+  accent-color: #78996f;
+}
+.enterRoomInputLabel {
+  margin-right: 90px;
+}
+.enterRoomInputText {
+  width: 100%;
+}
+.enterRoomButton {
+  font-weight: bold;
+  width: 100px;
+  height: 50px;
+  margin: 10px;
+  margin-right: 30px;
+}
+</style>
