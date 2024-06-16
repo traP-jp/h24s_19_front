@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api, { GetRoomsInner } from '@/lib/apis'
+import api, { Room } from '@/lib/apis'
 
-const rooms = ref<GetRoomsInner[]>([])
+const rooms = ref<Room[]>([])
 onMounted(async () => {
   const res = await api.apiRoomsGet()
   rooms.value = res.data.rooms
 })
 
 const router = useRouter()
-const enterRoom = (room: GetRoomsInner) => {
+const enterRoom = (room: Room) => {
   let query = undefined
   if (!room.isPublic) {
     query = { isPrivate: 1 }
