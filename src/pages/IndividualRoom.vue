@@ -17,7 +17,7 @@ const individualRoomStore = useIndividualRoom()
 const posts = computed(() => individualRoomStore.state.posts)
 
 const userStore = useStoreUser()
-const userId = computed(() => userStore.$state.userId)
+const userName = computed(() => userStore.$state.userName)
 
 onMounted(async () => {
   try {
@@ -66,22 +66,22 @@ const ranking = computed(() => {
     <div class="post-area-container">
       <div class="posted-word-container">
         <div v-for="post in posts" :key="post.wordId" class="word-card">
-          <span class="user-name">{{ post.senderName }}</span>
+          <span class="user-name">{{ post.userName }}</span>
           <span class="word">{{ `${post.word} (${post.reading})` }}</span>
           <div class="word-footer">
             <span>{{ `基礎点: ${post.basicScore}` }}</span>
             <div class="icons-container">
               <div class="thumb-container">
                 <ThumbUpIcon
-                  :class="{ 'icon-disabled': userId === post.senderId }"
-                  :color="userId === post.senderId ? '#a8d89c' : '#24A005'"
+                  :class="{ 'icon-disabled': userName === post.userName }"
+                  :color="userName === post.userName ? '#a8d89c' : '#24A005'"
                   @click="() => goodWord(post)"
                 />
                 <span>{{ post.additionalScore }}</span>
               </div>
               <ReportIcon
-                :class="{ 'icon-disabled': userId === post.senderId }"
-                :color="userId === post.senderId ? '#c15353' : '#FF0000'"
+                :class="{ 'icon-disabled': userName === post.userName }"
+                :color="userName === post.userName ? '#c15353' : '#FF0000'"
                 @click="() => reportWord(post)"
               />
             </div>
