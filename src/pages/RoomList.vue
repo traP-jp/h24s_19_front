@@ -8,7 +8,7 @@ onMounted(async () => {
   const res = await api.apiRoomsGet()
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  rooms.value = res.data.rooms
+  rooms.value = res.data
 })
 
 const router = useRouter()
