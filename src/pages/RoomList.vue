@@ -1,38 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import api, { GetRoomsInner } from '@/lib/apis'
 
-defineProps<{ msg: string }>()
-
-const count = ref(0)
+const rooms = ref<GetRoomsInner[]>([])
+onMounted(async () => {
+  const res = await api.apiRoomsGet()
+  rooms.value = res.data
+})
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
-
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
+  <div>
+    <div v-for="room in rooms" :key="room.roomId">
+      <div
+        v-if="room.roomId && typeof room.isPublic == 'boolean'"
+        class="roomListForms"
+      >
+        <!-- 下のpathは選択した部屋に入るページに飛ぶようにする -->
+        <button
+          @click="
+            () => {
+              $router.push({ path: '/rooms/' + room.roomId + '/enter' })
+            }
+          "
+        >
+          <div v-if="room.isPublic">フリールーム</div>
+          <div v-if="!room.isPublic">プライベートルーム</div>
+          {{ room.roomName }}, {{ room.userCount }}人参加中
+        </button>
+      </div>
+    </div>
   </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a href="https://github.com/vuejs/language-tools" target="_blank">Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
 
 <style scoped>
 .read-the-docs {
   color: #888;
+}
+.roomListForms {
+  margin: 10px;
 }
 </style>
