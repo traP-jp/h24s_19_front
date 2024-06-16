@@ -28,7 +28,7 @@ const submit = async () => {
       const resp = await api.apiRoomPost(roomInfo)
       const roomId = resp.data.roomId
       router.push({
-        path: `/rooms/${roomId}`,
+        path: `/rooms/${roomId}/enter`,
         query: { password: roomPassword.value },
       })
     } catch (e) {
