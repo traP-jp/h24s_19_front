@@ -27,8 +27,6 @@ const submit = async () => {
     // ここで resp から userId と userName を持たせて IndividualRoom へ
     if(resp.status==200){
       userNickName.value=resp.data.userName
-      const userId=resp.data.userId
-      userNickName.value=resp.userName
       store.setName(userNickName.value)
       submitError.value=false
       // stores/user に userId と userName を記録して、 /rooms/:id に移動させる
