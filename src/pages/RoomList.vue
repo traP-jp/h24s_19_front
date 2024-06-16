@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import api, { GetRoomsInner } from '@/lib/apis'
 
 const rooms = ref<GetRoomsInner[]>([])
@@ -7,6 +8,15 @@ onMounted(async () => {
   const res = await api.apiRoomsGet()
   rooms.value = res.data
 })
+
+const router = useRouter()
+const enterRoom = (room: GetRoomsInner) => {
+  let query = undefined
+  if (!room.isPublic) {
+    query = { isPrivate: 1 }
+  }
+  router.push({ path: '/rooms/' + room.roomId + '/enter', query })
+}
 </script>
 
 <template>
@@ -16,33 +26,29 @@ onMounted(async () => {
     <div class="roomListForms">
       <div v-for="room in rooms" :key="room.roomId"
       >
-        <div
-          v-if="room.roomId && typeof room.isPublic == 'boolean'"
+        <!-- 下のpathは選択した部屋に入るページに飛ぶようにする -->
+        <button
+          @click="
+            () => {
+              enterRoom(room)
+            }
+          "
+          class="roomListForm"
         >
-          <!-- 下のpathは選択した部屋に入るページに飛ぶようにする -->
-          <button
-            @click="
-              () => {
-                $router.push({ path: '/rooms/' + room.roomId + '/enter' })
-              }
-            "
-            class="roomListForm"
+          <div v-if="room.roomName.length <= 20"
+            class="roomListFormName"
           >
-            <div v-if="room.roomName.length <= 20"
-              class="roomListFormName"
-            >
-              {{ room.roomName }}
-              <img v-if="!room.isPublic" src="@/assets/lock.svg" alt="Lock SVG" class="lockImg" />
-            </div>
-            <div v-if="room.roomName.length > 20"
-              class="roomListFormName"
-            >
+            {{ room.roomName }}
+            <img v-if="!room.isPublic" src="@/assets/lock.svg" alt="Lock SVG" class="lockImg" />
+          </div>
+          <div v-if="room.roomName.length > 20"
+            class="roomListFormName"
+          >
             {{ room.roomName.substring(0,19) }}...
             <img v-if="!room.isPublic" src="@/assets/lock.svg" alt="Lock SVG" class="lockImg" />
           </div>
-            <div class="roomListFormNum">{{ room.userCount }}人が参加中</div>
-          </button>
-        </div>
+          <div class="roomListFormNum">{{ room.userCount }}人が参加中</div>
+        </button>
       </div>
     </div>
   </div>

@@ -5,4 +5,10 @@ export const useStoreUser = defineStore('user', {
     userName: '',
     userId: '',
   }),
+  actions: {
+    setUser(newName: string, newId: string) {
+      this.userName = newName
+      this.userId = newId
+    },
+  },
 })

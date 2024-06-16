@@ -4,7 +4,7 @@ const api = new Apis(
   new Configuration({
     basePath:
       process.env.NODE_ENV === 'production'
-        ? 'https://trap.show/h24s_19_server'
+        ? 'https://h24s-19.trap.show/server'
         : 'http://localhost:3000',
   }),
 )
