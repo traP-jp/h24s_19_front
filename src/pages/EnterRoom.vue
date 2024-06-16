@@ -62,29 +62,33 @@ onMounted(
 )
 </script>
 <template>
-<h1>
-  部屋に入る
-</h1>
-<p>部屋ID: {{ thisRoomId }}</p>
-<p>この部屋で使うニックネームを設定してください。</p>
-<p>
-  <label>
-    ニックネーム
-    <input v-model="userNickName">
-  </label>
-</p>
-<p>
-  <label>
-    合言葉
-    <input v-model="roomPassword">
-  </label>
-</p>
+  <h1>
+    部屋に入る
+  </h1>
+  <p>部屋ID: {{ thisRoomId }}</p>
+  <p>この部屋で使うニックネームを設定してください。</p>
+  <p>
+    <label>
+      ニックネーム
+      <input v-model="userNickName">
+    </label>
+  </p>
+  <p>
+    <label>
+      合言葉
+      <input v-model="roomPassword">
+    </label>
+  </p>
 
-<p><button @click="submit">参加</button></p>
-<div v-if="userSettingError">
-  <p>ニックネームが使用不可能。もしくは間違った合言葉です。</p>
-</div>
-<div v-if="submitError">
-  <p>エラーが発生しました。操作をやり直してください。</p>
-</div>
+  <p>
+    <button @click="submit">
+      参加
+    </button>
+  </p>
+  <div v-if="userSettingError">
+    <p>ニックネームが使用不可能。もしくは間違った合言葉です。</p>
+  </div>
+  <div v-if="submitError">
+    <p>エラーが発生しました。操作をやり直してください。</p>
+  </div>
 </template>
