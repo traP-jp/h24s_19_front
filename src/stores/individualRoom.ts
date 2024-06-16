@@ -23,8 +23,7 @@ interface BasicPost {
   word: string
   reading: string
   basicScore: number
-  senderId: string
-  senderName: string
+  userName: string
 }
 
 export interface Post extends BasicPost {
@@ -113,7 +112,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
             totalScore: data.basicScore,
             isInvalid: false,
           })
-          userScoreChange(data.senderName, data.basicScore)
+          userScoreChange(data.userName, data.basicScore)
           break
         case 'post_word_rejected':
           state.value.rejectedPosts.push(data)
@@ -126,7 +125,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
             throw new Error('Post not found')
           }
 
-          userScoreChange(post.senderName, data.totalScore - post.totalScore)
+          userScoreChange(post.userName, data.totalScore - post.totalScore)
 
           post.additionalScore = data.additionalScore
           post.basicScore = data.basicScore
@@ -160,7 +159,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
       throw new Error('WebSocket is not connected')
     }
 
-    if (post.senderId === userStore.userId) {
+    if (post.userName === userStore.userId) {
       return
     }
 
@@ -174,7 +173,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
       throw new Error('WebSocket is not connected')
     }
 
-    if (post.senderId === userStore.userId) {
+    if (post.userName === userStore.userId) {
       return
     }
 
