@@ -4,6 +4,9 @@ import { defineStore } from 'pinia'
 type IndividualRoomState =
   | {
       ws: null
+      roomId: undefined
+      posts: []
+      rejectedPosts: []
     }
   | {
       ws: WebSocket
@@ -56,20 +59,30 @@ const BASE_URL =
 const websocketUrl = (roomId: string) => `${BASE_URL}/api/ws/${roomId}`
 
 export const useIndividualRoom = defineStore('individualRoom', () => {
-  const state = ref<IndividualRoomState>({
+  const initialState = {
     ws: null,
-  })
+    roomId: undefined,
+    posts: [] as [],
+    rejectedPosts: [] as [],
+  }
+
+  const state = ref<IndividualRoomState>(initialState)
 
   const connect = (roomId: string) => {
     const ws = new WebSocket(websocketUrl(roomId))
     ws.onopen = () => {
       console.log('connected')
-      state.value = { ws, roomId, posts: [], rejectedPosts: [] }
+      state.value = {
+        ws,
+        roomId,
+        posts: [],
+        rejectedPosts: [],
+      }
     }
 
     ws.onclose = () => {
       console.log('disconnected')
-      state.value = { ws: null }
+      state.value = initialState
     }
 
     ws.onmessage = (event) => {
