@@ -3,8 +3,8 @@ import { ref,onMounted } from 'vue'
 import api,{EnterRoom} from '@/lib/apis'
 import router from '@/router';
 
-import {useRoomStore} from '@/stores/room'
-const store=useRoomStore()
+import {userUserStore} from '@/stores/user'
+const store=userUserStore()
 // 部屋に入る前のページ
 // 必須: 名前
 // private -> 合言葉の入力欄
@@ -26,10 +26,11 @@ const submit = async () => {
      const resp = (await api.apiRoomRoomIdEnterPost(thisRoomId.value,enterInfo))
     // ここで resp から userId と userName を持たせて IndividualRoom へ
     if(resp.status==200){
-      userNickName.value=resp.data.userName
-      store.setName(userNickName.value)
       submitError.value=false
       // stores/user に userId と userName を記録して、 /rooms/:id に移動させる
+      userNickName.value=resp.data.userName
+      const userId=resp.data.userId
+      store.setUser(userNickName.value,userId)
       router.push(
         {path: `/rooms/${thisRoomId.value}`}
       )
