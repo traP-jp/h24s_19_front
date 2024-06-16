@@ -1,60 +1,60 @@
 <script setup lang="ts">
-import { ref,onMounted } from 'vue'
-import api,{EnterRoom} from '@/lib/apis'
+import { ref, onMounted } from 'vue'
+import api, { EnterRoom } from '@/lib/apis'
 import router from '@/router';
 
-import {userUserStore} from '@/stores/user'
-const store=userUserStore()
+import { userUserStore } from '@/stores/user'
+const store = userUserStore()
 // 部屋に入る前のページ
 // 必須: 名前
 // private -> 合言葉の入力欄
 // 名前を適切に設定 && 合言葉が正しい -> IndividualRoom へ
 // 名前に被り || 合言葉が不正 -> 失敗を表示して再入力へ
 
-const thisRoomId=ref('')
-const userNickName=ref('')
-const roomPassword=ref('')
-const submitError=ref(false)
-const userSettingError=ref(false)
+const thisRoomId = ref('')
+const userNickName = ref('')
+const roomPassword = ref('')
+const submitError = ref(false)
+const userSettingError = ref(false)
 const submit = async () => {
-  const enterInfo:EnterRoom={
+  const enterInfo: EnterRoom = {
     "userName": userNickName.value,
     "password": roomPassword.value
   }
-  try{
+  try {
     // enterRoom を送る
-     const resp = (await api.apiRoomRoomIdEnterPost(thisRoomId.value,enterInfo))
+    const resp = (await api.apiRoomRoomIdEnterPost(thisRoomId.value, enterInfo))
     // ここで resp から userId と userName を持たせて IndividualRoom へ
-    if(resp.status==200){
-      submitError.value=false
+    if (resp.status == 200) {
+      submitError.value = false
       // stores/user に userId と userName を記録して、 /rooms/:id に移動させる
-      userNickName.value=resp.data.userName
-      const userId=resp.data.userId
-      store.setUser(userNickName.value,userId)
+      userNickName.value = resp.data.userName
+      const userId = resp.data.userId
+      store.setUser(userNickName.value, userId)
       router.push(
-        {path: `/rooms/${thisRoomId.value}`}
+        { path: `/rooms/${thisRoomId.value}` }
       )
-    }else{
-      userSettingError.value=true
+    } else {
+      userSettingError.value = true
     }
-  }catch (e){
+  } catch (e) {
     // 通信エラー or userNameエラー or password エラー
     console.error(e)
-    submitError.value=true
+    submitError.value = true
   }
 }
 
 onMounted(
-  ()=>{
-    const roomId=router.currentRoute.value.params.id
-    if(typeof roomId == 'string'){
-      thisRoomId.value=roomId
-    }else{
+  () => {
+    const roomId = router.currentRoute.value.params.id
+    if (typeof roomId == 'string') {
+      thisRoomId.value = roomId
+    } else {
       console.error("Invalid RoomId type")
     }
-    const queryPassword=router.currentRoute.value.query['password']
-    if(typeof queryPassword == 'string'){
-      roomPassword.value=queryPassword
+    const queryPassword = router.currentRoute.value.query['password']
+    if (typeof queryPassword == 'string') {
+      roomPassword.value = queryPassword
     }
   }
 
