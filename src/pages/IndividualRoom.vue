@@ -31,6 +31,8 @@ const postWordInput = ref('')
 const postReadingInput = ref('')
 const postWord = () => {
   individualRoomStore.sendPost(postWordInput.value, postReadingInput.value)
+  postWordInput.value = ''
+  postReadingInput.value = ''
 }
 
 const goodWord = (post: Post) => {

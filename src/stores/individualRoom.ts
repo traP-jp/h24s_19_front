@@ -59,7 +59,6 @@ const BASE_URL =
   process.env.NODE_ENV === 'production'
     ? 'ws://h24s-19.trap.show/server'
     : 'ws://localhost:3000'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const websocketUrl = () => `${BASE_URL}/api/ws`
 
 export const useIndividualRoom = defineStore('individualRoom', () => {
