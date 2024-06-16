@@ -17,6 +17,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/pages/IndividualRoom.vue'),
   },
   {
+    path: '/rooms/:id/enter',
+    name: 'EnterRoom',
+    component: () => import('@/pages/EnterRoom.vue'),
+  },
+  {
     path: '/rooms/create',
     name: 'CreateRoom',
     component: () => import('@/pages/CreateRoom.vue'),

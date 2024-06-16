@@ -27,9 +27,15 @@ const submit = async () => {
     try {
       const resp = await api.apiRoomPost(roomInfo)
       const roomId = resp.data.roomId
+
+      let query = undefined
+      if (!isPublic.value) {
+        query = { password: roomPassword.value, isPrivate: 1 }
+      }
+
       router.push({
-        path: `/rooms/${roomId}`,
-        query: { password: roomPassword.value },
+        path: `/rooms/${roomId}/enter`,
+        query,
       })
     } catch (e) {
       console.error(e)
