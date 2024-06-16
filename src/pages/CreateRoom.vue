@@ -101,8 +101,9 @@ const submit = async () => {
 }
 .createRoomButton{
   font-weight: bold;
-  width: 80px;
-  height: 45px;
-  margin: 30px;
+  width: 100px;
+  height: 50px;
+  margin: 10px;
+  margin-right: 30px;
 }
 </style>

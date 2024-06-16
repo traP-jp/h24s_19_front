@@ -22,8 +22,8 @@
 .changePageButton {
   margin: 10px;
   font-weight: bold;
-  width: 150px;
-  height: 50px;
+  width: 190px;
+  height: 55px;
 }
 .homePageContents{
   display: flex;

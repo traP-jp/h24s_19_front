@@ -28,16 +28,16 @@ onMounted(async () => {
             "
             class="roomListForm"
           >
-            <div v-if="room.roomName.length <= 10"
+            <div v-if="room.roomName.length <= 20"
               class="roomListFormName"
             >
               {{ room.roomName }}
               <img v-if="!room.isPublic" src="@/assets/lock.svg" alt="Lock SVG" class="lockImg" />
             </div>
-            <div v-if="room.roomName.length > 10"
+            <div v-if="room.roomName.length > 20"
               class="roomListFormName"
             >
-            {{ room.roomName.substring(0,9) }}...
+            {{ room.roomName.substring(0,19) }}...
             <img v-if="!room.isPublic" src="@/assets/lock.svg" alt="Lock SVG" class="lockImg" />
           </div>
             <div class="roomListFormNum">{{ room.userCount }}人が参加中</div>
@@ -62,8 +62,8 @@ onMounted(async () => {
 }
 .roomListForm {
   margin: 5px;
-  width: 160px;
-  height: 60px;
+  width: 200px;
+  height: 70px;
 }
 .roomListFormName{
   font-weight: bold;
