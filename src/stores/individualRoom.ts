@@ -57,7 +57,7 @@ type WebSocketResponse = PostedWord | RejectedPostResponse | ScoreChangeResponse
 
 const BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? 'wss://trap.show/h24s_19_server'
+    ? 'wss://h24s-19.trap.show/server'
     : 'ws://localhost:3000'
 const websocketUrl = (roomId: string) => `${BASE_URL}/api/ws/${roomId}`
 
