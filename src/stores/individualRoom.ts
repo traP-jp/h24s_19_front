@@ -90,6 +90,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
         rejectedPosts: [],
         userScoreMap: {},
       }
+      ws.send(JSON.stringify({ type: 'init' }))
     }
 
     ws.onclose = () => {
