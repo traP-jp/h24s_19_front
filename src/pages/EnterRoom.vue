@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import api, { EnterRoom } from '@/lib/apis'
 import router from '@/router'
 
@@ -25,21 +25,20 @@ const submit = async () => {
     // enterRoom を送る
     const resp = await api.apiRoomRoomIdEnterPost(thisRoomId.value, enterInfo)
     // ここで resp から userId と userName を持たせて IndividualRoom へ
-    if (resp.status == 200) {
-      submitError.value = false
-      // stores/user に userId と userName を記録して、 /rooms/:id に移動させる
-      const userId = resp.data.userId
-      store.setUser(resp.data.userName, userId)
-      router.push({ path: `/rooms/${thisRoomId.value}` })
-    } else {
-      userSettingError.value = true
-    }
+
+    submitError.value = false
+    // stores/user に userId と userName を記録して、 /rooms/:id に移動させる
+    const userId = resp.data.userId
+    store.setUser(resp.data.userName, userId)
+    router.push({ path: `/rooms/${thisRoomId.value}` })
   } catch (e) {
     // 通信エラー or userNameエラー or password エラー
     console.error(e)
     submitError.value = true
   }
 }
+
+const isPrivate = computed(() => 'isPrivate' in router.currentRoute.value.query)
 
 onMounted(() => {
   const roomId = router.currentRoute.value.params.id
@@ -64,7 +63,7 @@ onMounted(() => {
       <input v-model="userNickName" />
     </label>
   </p>
-  <p>
+  <p v-if="isPrivate">
     <label>
       合言葉
       <input v-model="roomPassword" />
