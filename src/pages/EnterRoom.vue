@@ -3,6 +3,8 @@ import { ref,onMounted } from 'vue'
 import api,{EnterRoom} from '@/lib/apis'
 import router from '@/router';
 
+import {useRoomStore} from '@/stores/room'
+const store=useRoomStore()
 // 部屋に入る前のページ
 // 必須: 名前
 // private -> 合言葉の入力欄
@@ -12,7 +14,8 @@ import router from '@/router';
 const thisRoomId=ref('')
 const userNickName=ref('')
 const roomPassword=ref('')
-const errMsg=ref('')
+const submitError=ref(false)
+const userSettingError=ref(false)
 const submit = async () => {
   const enterInfo:EnterRoom={
     "userName": userNickName.value,
@@ -20,18 +23,25 @@ const submit = async () => {
   }
   try{
     // enterRoom を送る
-     const resp = (await api.apiRoomRoomIdEnterPost(thisRoomId.value,enterInfo)).data
+     const resp = (await api.apiRoomRoomIdEnterPost(thisRoomId.value,enterInfo))
     // ここで resp から userId と userName を持たせて IndividualRoom へ
-    userNickName.value=resp.userName
-    const userId=resp.userId
-    userNickName.value=resp.userName
-    // stores/user に userId と userName を記録して、 /rooms/:id に移動させる
-     router.push(
-      {path: `/rooms/${thisRoomId}`}
-     )
+    if(resp.status==200){
+      userNickName.value=resp.data.userName
+      const userId=resp.data.userId
+      userNickName.value=resp.userName
+      store.setName(userNickName.value)
+      submitError.value=false
+      // stores/user に userId と userName を記録して、 /rooms/:id に移動させる
+      router.push(
+        {path: `/rooms/${thisRoomId.value}`}
+      )
+    }else{
+      userSettingError.value=true
+    }
   }catch (e){
     // 通信エラー or userNameエラー or password エラー
     console.error(e)
+    submitError.value=true
   }
 }
 
@@ -71,6 +81,10 @@ onMounted(
 </p>
 
 <p><button @click="submit">参加</button></p>
-
-<p>{{ errMsg }}</p>
+<div v-if="userSettingError">
+  <p>ニックネームが使用不可能。もしくは間違った合言葉です。</p>
+</div>
+<div v-if="submitError">
+  <p>エラーが発生しました。操作をやり直してください。</p>
+</div>
 </template>
