@@ -28,9 +28,8 @@ const submit = async () => {
     if (resp.status == 200) {
       submitError.value = false
       // stores/user に userId と userName を記録して、 /rooms/:id に移動させる
-      userNickName.value = resp.data.userName
       const userId = resp.data.userId
-      store.setUser(userNickName.value, userId)
+      store.setUser(resp.data.userName, userId)
       router.push({ path: `/rooms/${thisRoomId.value}` })
     } else {
       userSettingError.value = true
