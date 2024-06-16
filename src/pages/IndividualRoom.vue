@@ -10,7 +10,7 @@ const router = useRouter()
 const roomId = computed(() =>
   Array.isArray(router.currentRoute.value.params.id)
     ? router.currentRoute.value.params.id[0]
-    : router.currentRoute.value.params.id
+    : router.currentRoute.value.params.id,
 )
 
 const individualRoomStore = useIndividualRoom()
@@ -41,63 +41,110 @@ const goodWord = (post: Post) => {
 const reportWord = (post: Post) => {
   individualRoomStore.reportPost(post)
 }
+
+const ranking = computed(() => {
+  if (individualRoomStore.state.ws === null) {
+    return []
+  }
+
+  const ranking: { name: string; score: number }[] = []
+  for (const userName of Object.keys(individualRoomStore.state.userScoreMap)) {
+    ranking.push({
+      name: userName,
+      score: individualRoomStore.state.userScoreMap[userName],
+    })
+  }
+  ranking.sort((a, b) => b.score - a.score)
+  return ranking
+})
 </script>
 
 <template>
   <div class="container">
-    <div class="posted-word-container">
-      <div v-for="post in posts" :key="post.wordId" class="word-card">
-        <span class="user-name">{{ post.senderName }}</span>
-        <span class="word">{{ `${post.word} (${post.reading})` }}</span>
-        <div class="word-footer">
-          <span>{{ `基礎点: ${post.basicScore}` }}</span>
-          <div class="icons-container">
-            <div class="thumb-container">
-              <ThumbUpIcon
+    <div class="post-area-container">
+      <div class="posted-word-container">
+        <div v-for="post in posts" :key="post.wordId" class="word-card">
+          <span class="user-name">{{ post.senderName }}</span>
+          <span class="word">{{ `${post.word} (${post.reading})` }}</span>
+          <div class="word-footer">
+            <span>{{ `基礎点: ${post.basicScore}` }}</span>
+            <div class="icons-container">
+              <div class="thumb-container">
+                <ThumbUpIcon
+                  :class="{ 'icon-disabled': userId === post.senderId }"
+                  :color="userId === post.senderId ? '#a8d89c' : '#24A005'"
+                  @click="() => goodWord(post)"
+                />
+                <span>{{ post.additionalScore }}</span>
+              </div>
+              <ReportIcon
                 :class="{ 'icon-disabled': userId === post.senderId }"
-                :color="userId === post.senderId ? '#a8d89c' : '#24A005'"
-                @click="() => goodWord(post)"
+                :color="userId === post.senderId ? '#c15353' : '#FF0000'"
+                @click="() => reportWord(post)"
               />
-              <span>{{ post.additionalScore }}</span>
             </div>
-            <ReportIcon
-              :class="{ 'icon-disabled': userId === post.senderId }"
-              :color="userId === post.senderId ? '#c15353' : '#FF0000'"
-              @click="() => reportWord(post)"
-            />
           </div>
         </div>
       </div>
+
+      <div class="input-container">
+        <div class="input-area">
+          <label class="input-label">
+            {{ '単語' }}
+            <input v-model="postWordInput" type="text" />
+          </label>
+          <label class="input-label">
+            {{ '単語の読み' }}
+            <input v-model="postReadingInput" type="text" />
+          </label>
+        </div>
+        <button @click="postWord">
+          {{ '送信' }}
+        </button>
+      </div>
     </div>
 
-    <div class="input-container">
-      <div class="input-area">
-        <label class="input-label">
-          {{ '単語' }}
-          <input v-model="postWordInput" type="text" />
-        </label>
-        <label class="input-label">
-          {{ '単語の読み' }}
-          <input v-model="postReadingInput" type="text" />
-        </label>
+    <div class="ranking-container">
+      <div class="ranking-title">{{ 'ランキング' }}</div>
+      <div class="ranking-list">
+        <div
+          v-for="(user, index) in ranking"
+          :key="user.name"
+          class="ranking-individual"
+        >
+          <div>
+            <span :style="{ fontWeight: 'bold', marginRight: '16px' }">
+              {{ `${index + 1}位` }}
+            </span>
+            <span>{{ user.name }}</span>
+          </div>
+          <span>{{ `${user.score}点` }}</span>
+        </div>
       </div>
-      <button @click="postWord">
-        {{ '送信' }}
-      </button>
     </div>
   </div>
 </template>
 
 <style scoped>
 .container {
-  max-width: 700px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr 400px;
   height: 100%;
   width: 100%;
-  margin: 0 auto;
+  overflow: hidden;
+}
+
+.post-area-container {
+  height: 100%;
+  width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
+  padding: 0 20px;
+  margin-right: 10px;
+  box-sizing: border-box;
 }
 
 .posted-word-container {
@@ -177,6 +224,36 @@ const reportWord = (post: Post) => {
   align-items: center;
   gap: 4px;
   width: 100%;
+  font-size: 20px;
+}
+
+.ranking-container {
+  width: 100%;
+  overflow-y: auto;
+  padding: 10px;
+  margin: 10px;
+  border-left: 2px solid #5b5b5b;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  gap: 10px;
+}
+
+.ranking-title {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ranking-individual {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 20px;
 }
 </style>

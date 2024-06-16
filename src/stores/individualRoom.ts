@@ -107,20 +107,20 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
             totalScore: data.basicScore,
             isInvalid: false,
           })
-          userScoreChange(data.senderId, data.basicScore)
+          userScoreChange(data.senderName, data.basicScore)
           break
         case 'post_word_rejected':
           state.value.rejectedPosts.push(data)
           break
         case 'score_change':
           const post = state.value.posts.find(
-            (post) => post.wordId === data.wordId
+            (post) => post.wordId === data.wordId,
           )
           if (post === undefined) {
             throw new Error('Post not found')
           }
 
-          userScoreChange(post.senderId, data.totalScore - post.totalScore)
+          userScoreChange(post.senderName, data.totalScore - post.totalScore)
 
           post.additionalScore = data.additionalScore
           post.basicScore = data.basicScore
@@ -145,7 +145,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
       throw new Error('WebSocket is not connected')
     }
     state.value.ws.send(
-      JSON.stringify({ type: 'postWord', args: { word, reading } })
+      JSON.stringify({ type: 'postWord', args: { word, reading } }),
     )
   }
 
@@ -159,7 +159,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
     }
 
     state.value.ws.send(
-      JSON.stringify({ type: 'reportWord', args: { wordId: post.wordId } })
+      JSON.stringify({ type: 'reportWord', args: { wordId: post.wordId } }),
     )
   }
 
@@ -169,24 +169,24 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
     }
 
     if (post.senderId === userStore.userId) {
-      retrun
+      return
     }
 
     state.value.ws.send(
       JSON.stringify({
         type: 'goodWord',
         args: { wordId: post.wordId, score },
-      })
+      }),
     )
   }
 
-  const userScoreChange = (userId: string, score: number) => {
+  const userScoreChange = (userName: string, score: number) => {
     if (state.value.ws === null) {
       throw new Error('WebSocket is not connected')
     }
 
-    const prevScore = state.value.userScoreMap[userId] || 0
-    state.value.userScoreMap[userId] = prevScore + score
+    const prevScore = state.value.userScoreMap[userName] || 0
+    state.value.userScoreMap[userName] = prevScore + score
   }
 
   return {
