@@ -20,7 +20,7 @@ onMounted(async () => {
         <button
           @click="
             () => {
-              $router.push({ path: '/room/' + room.roomId + '/enter' })
+              $router.push({ path: '/rooms/' + room.roomId + '/enter' })
             }
           "
         >
