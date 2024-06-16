@@ -43,28 +43,49 @@ const submit = async () => {
     <h2 id="title">部屋を作る</h2>
     <table class="widthMax">
       <tr>
-      <label>
-        <th>部屋を全体公開する</th>
-        <td><input v-model="isPublic" type="checkbox" class="createRoomInputCheckBox" /></td>
-      </label>
+        <label>
+          <th>部屋を全体公開する</th>
+          <td>
+            <input
+              v-model="isPublic"
+              type="checkbox"
+              class="createRoomInputCheckBox"
+            />
+          </td>
+        </label>
       </tr>
       <tr class="widthMax">
         <label class="widthMax">
-        <th><span class="createRoomInputLabel">部屋名</span></th>
-        <td class="Td"><input v-model="newRoomName" type="text" placeholder="roomname" class="createRoomInputText" /></td>
-      </label>
+          <th>
+            <span class="createRoomInputLabel">部屋名</span>
+          </th>
+          <td class="Td">
+            <input
+              v-model="newRoomName"
+              type="text"
+              placeholder="roomname"
+              class="createRoomInputText"
+            />
+          </td>
+        </label>
       </tr>
       <tr class="widthMax">
         <label v-if="!isPublic" class="widthMax">
           <th><span class="createRoomInputLabel">合言葉</span></th>
-          <td class="Td"><input v-model="roomPassword" type="text" placeholder="password" class="createRoomInputText" /></td>
+          <td class="Td">
+            <input
+              v-model="roomPassword"
+              type="text"
+              placeholder="password"
+              class="createRoomInputText"
+            />
+          </td>
         </label>
       </tr>
-      </table>
-          <div style="text-align: right;">
-            <button @click="submit()" class="createRoomButton">作成</button>
-          </div>
-
+    </table>
+    <div style="text-align: right">
+      <button class="createRoomButton" @click="submit()">作成</button>
+    </div>
   </div>
   <div class="err">
     {{ errorMsg }}
@@ -78,28 +99,27 @@ const submit = async () => {
 .err {
   color: red;
 }
-.Td{
+.Td {
   width: calc(100% - 70px);
   display: inline-block;
 }
-.widthMax{
+.widthMax {
   width: 100%;
   display: inline-block;
 }
-.createRoomContents{
+.createRoomContents {
   margin: 20px;
 }
-.createRoomInputCheckBox{ 
-  accent-color: #78996f
-
+.createRoomInputCheckBox {
+  accent-color: #78996f;
 }
-.createRoomInputLabel{
+.createRoomInputLabel {
   margin-right: 90px;
 }
-.createRoomInputText{ 
+.createRoomInputText {
   width: 100%;
 }
-.createRoomButton{
+.createRoomButton {
   font-weight: bold;
   width: 100px;
   height: 50px;

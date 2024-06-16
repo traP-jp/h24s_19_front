@@ -25,11 +25,10 @@
   width: 190px;
   height: 55px;
 }
-.homePageContents{
+.homePageContents {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
-
 </style>

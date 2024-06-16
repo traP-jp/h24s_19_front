@@ -14,32 +14,35 @@ onMounted(async () => {
     <h2>部屋一覧</h2>
     <p>プライベートルームに入るには合言葉が必要です</p>
     <div class="roomListForms">
-      <div v-for="room in rooms" :key="room.roomId"
-      >
-        <div
-          v-if="room.roomId && typeof room.isPublic == 'boolean'"
-        >
+      <div v-for="room in rooms" :key="room.roomId">
+        <div v-if="room.roomId && typeof room.isPublic == 'boolean'">
           <!-- 下のpathは選択した部屋に入るページに飛ぶようにする -->
           <button
+            class="roomListForm"
             @click="
               () => {
                 $router.push({ path: '/rooms/' + room.roomId + '/enter' })
               }
             "
-            class="roomListForm"
           >
-            <div v-if="room.roomName.length <= 20"
-              class="roomListFormName"
-            >
+            <div v-if="room.roomName.length <= 20" class="roomListFormName">
               {{ room.roomName }}
-              <img v-if="!room.isPublic" src="@/assets/lock.svg" alt="Lock SVG" class="lockImg" />
+              <img
+                v-if="!room.isPublic"
+                src="@/assets/lock.svg"
+                alt="Lock SVG"
+                class="lockImg"
+              />
             </div>
-            <div v-if="room.roomName.length > 20"
-              class="roomListFormName"
-            >
-            {{ room.roomName.substring(0,19) }}...
-            <img v-if="!room.isPublic" src="@/assets/lock.svg" alt="Lock SVG" class="lockImg" />
-          </div>
+            <div v-if="room.roomName.length > 20" class="roomListFormName">
+              {{ room.roomName.substring(0, 19) }}...
+              <img
+                v-if="!room.isPublic"
+                src="@/assets/lock.svg"
+                alt="Lock SVG"
+                class="lockImg"
+              />
+            </div>
             <div class="roomListFormNum">{{ room.userCount }}人が参加中</div>
           </button>
         </div>
@@ -52,27 +55,27 @@ onMounted(async () => {
 .read-the-docs {
   color: #888;
 }
-.roomListContents{
+.roomListContents {
   margin: 20px;
 }
-.roomListForms{
+.roomListForms {
   display: flex;
-	flex-wrap: wrap;
-	padding: 20px;
+  flex-wrap: wrap;
+  padding: 20px;
 }
 .roomListForm {
   margin: 5px;
   width: 200px;
   height: 70px;
 }
-.roomListFormName{
+.roomListFormName {
   font-weight: bold;
 }
-.lockImg{
+.lockImg {
   width: 10px;
   height: 10px;
 }
-.roomListFormNum{
+.roomListFormNum {
   margin-top: 5px;
   font-size: 60%;
 }
