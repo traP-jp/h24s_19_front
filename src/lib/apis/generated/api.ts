@@ -64,33 +64,21 @@ export interface EnterRoomSuccess {
 /**
  * 
  * @export
- * @interface GetRoomsInner
+ * @interface GetRooms
  */
-export interface GetRoomsInner {
+export interface GetRooms {
     /**
      * 
-     * @type {string}
-     * @memberof GetRoomsInner
+     * @type {Array<Room>}
+     * @memberof GetRooms
      */
-    'roomId': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetRoomsInner
-     */
-    'roomName': string;
+    'rooms': Array<Room>;
     /**
      * 
      * @type {boolean}
-     * @memberof GetRoomsInner
+     * @memberof GetRooms
      */
-    'isPublic': boolean;
-    /**
-     * 部屋に入っている人数
-     * @type {number}
-     * @memberof GetRoomsInner
-     */
-    'userCount': number;
+    'hasNext': boolean;
 }
 /**
  * 
@@ -135,6 +123,37 @@ export interface PostRoomSuccess {
      * @memberof PostRoomSuccess
      */
     'roomName': string;
+}
+/**
+ * 
+ * @export
+ * @interface Room
+ */
+export interface Room {
+    /**
+     * 
+     * @type {string}
+     * @memberof Room
+     */
+    'roomId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Room
+     */
+    'roomName': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Room
+     */
+    'isPublic': boolean;
+    /**
+     * 部屋に入っている人数
+     * @type {number}
+     * @memberof Room
+     */
+    'userCount': number;
 }
 
 /**
@@ -222,10 +241,12 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary 全ての部屋一覧を取得
+         * @param {number} [limit] 何件取得するか
+         * @param {number} [offset] 何件目から取得するか
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRoomsGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiRoomsGet: async (limit?: number, offset?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/rooms`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -237,6 +258,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
+            }
 
 
     
@@ -323,11 +352,13 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary 全ての部屋一覧を取得
+         * @param {number} [limit] 何件取得するか
+         * @param {number} [offset] 何件目から取得するか
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRoomsGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetRoomsInner>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRoomsGet(options);
+        async apiRoomsGet(limit?: number, offset?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetRooms>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRoomsGet(limit, offset, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DefaultApi.apiRoomsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -379,11 +410,13 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary 全ての部屋一覧を取得
+         * @param {number} [limit] 何件取得するか
+         * @param {number} [offset] 何件目から取得するか
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRoomsGet(options?: any): AxiosPromise<Array<GetRoomsInner>> {
-            return localVarFp.apiRoomsGet(options).then((request) => request(axios, basePath));
+        apiRoomsGet(limit?: number, offset?: number, options?: any): AxiosPromise<GetRooms> {
+            return localVarFp.apiRoomsGet(limit, offset, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -433,12 +466,14 @@ export class DefaultApi extends BaseAPI {
     /**
      * 
      * @summary 全ての部屋一覧を取得
+     * @param {number} [limit] 何件取得するか
+     * @param {number} [offset] 何件目から取得するか
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public apiRoomsGet(options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).apiRoomsGet(options).then((request) => request(this.axios, this.basePath));
+    public apiRoomsGet(limit?: number, offset?: number, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).apiRoomsGet(limit, offset, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -483,12 +518,14 @@ export class Apis extends BaseAPI {
     /**
      *
      * @summary 全ての部屋一覧を取得
+     * @param {number} [limit] 何件取得するか
+     * @param {number} [offset] 何件目から取得するか
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public apiRoomsGet(options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).apiRoomsGet(options).then((request) => request(this.axios, this.basePath));
+    public apiRoomsGet(limit?: number, offset?: number, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).apiRoomsGet(limit, offset, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
