@@ -39,34 +39,33 @@ const submit = async () => {
 </script>
 
 <template>
-  <h1 id="title">部屋を作る</h1>
-  <label>
-    部屋を全体公開する
-    <input v-model="isPublic" type="checkbox" />
-  </label>
-  <label>
-    <p>
-      部屋名
-      <input v-model="newRoomName" type="text" />
-    </p>
-  </label>
-  <label v-if="!isPublic">
-    <p>
-      合言葉
-      <input v-model="roomPassword" type="text" />
-    </p>
-  </label>
-  <div>
-    <h2>現在の設定</h2>
-    <p>部屋名: {{ newRoomName }}</p>
-    <p>
-      部屋を全体公開
-      <span v-if="isPublic">する</span>
-      <span v-else>しない</span>
-    </p>
-    <p v-if="!isPublic">合言葉: {{ roomPassword }}</p>
+  <div class="createRoomContents">
+    <h2 id="title">部屋を作る</h2>
+    <table class="widthMax">
+      <tr>
+      <label>
+        <th>部屋を全体公開する</th>
+        <td><input v-model="isPublic" type="checkbox" class="createRoomInputCheckBox" /></td>
+      </label>
+      </tr>
+      <tr class="widthMax">
+        <label class="widthMax">
+        <th><span class="createRoomInputLabel">部屋名</span></th>
+        <td class="Td"><input v-model="newRoomName" type="text" placeholder="roomname" class="createRoomInputText" /></td>
+      </label>
+      </tr>
+      <tr class="widthMax">
+        <label v-if="!isPublic" class="widthMax">
+          <th><span class="createRoomInputLabel">合言葉</span></th>
+          <td class="Td"><input v-model="roomPassword" type="text" placeholder="password" class="createRoomInputText" /></td>
+        </label>
+      </tr>
+      </table>
+          <div style="text-align: right;">
+            <button @click="submit()" class="createRoomButton">作成</button>
+          </div>
+
   </div>
-  <button @click="submit()">作成する</button>
   <div class="err">
     {{ errorMsg }}
   </div>
@@ -78,5 +77,32 @@ const submit = async () => {
 }
 .err {
   color: red;
+}
+.Td{
+  width: calc(100% - 70px);
+  display: inline-block;
+}
+.widthMax{
+  width: 100%;
+  display: inline-block;
+}
+.createRoomContents{
+  margin: 20px;
+}
+.createRoomInputCheckBox{ 
+  accent-color: #78996f
+
+}
+.createRoomInputLabel{
+  margin-right: 90px;
+}
+.createRoomInputText{ 
+  width: 100%;
+}
+.createRoomButton{
+  font-weight: bold;
+  width: 80px;
+  height: 45px;
+  margin: 30px;
 }
 </style>

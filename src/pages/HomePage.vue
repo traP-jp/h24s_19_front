@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <div class="homePageContents">
     <button
       class="changePageButton"
       @click="() => $router.push({ path: '/rooms' })"
     >
-      ルームを探す
+      部屋を探す
     </button>
     <button
       class="changePageButton"
       @click="() => $router.push({ path: '/rooms/create' })"
     >
-      ルームを作成
+      部屋を作る
     </button>
   </div>
 </template>
@@ -21,5 +21,15 @@
 }
 .changePageButton {
   margin: 10px;
+  font-weight: bold;
+  width: 150px;
+  height: 50px;
 }
+.homePageContents{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 </style>
