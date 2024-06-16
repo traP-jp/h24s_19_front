@@ -74,6 +74,7 @@ const ranking = computed(() => {
               <div class="thumb-container">
                 <ThumbUpIcon
                   :class="{ 'icon-disabled': userName === post.userName }"
+                  class="icon-button"
                   :color="userName === post.userName ? '#a8d89c' : '#24A005'"
                   @click="() => goodWord(post)"
                 />
@@ -81,6 +82,7 @@ const ranking = computed(() => {
               </div>
               <ReportIcon
                 :class="{ 'icon-disabled': userName === post.userName }"
+                class="icon-button"
                 :color="userName === post.userName ? '#c15353' : '#FF0000'"
                 @click="() => reportWord(post)"
               />
@@ -197,6 +199,10 @@ const ranking = computed(() => {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.icon-button {
+  cursor: pointer;
 }
 
 .icon-disabled {
