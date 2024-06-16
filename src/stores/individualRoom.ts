@@ -60,7 +60,7 @@ const BASE_URL =
     ? 'wss://h24s-19.trap.show/server'
     : 'ws://localhost:3000'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const websocketUrl = (roomId: string) => `${BASE_URL}/api/ws`
+const websocketUrl = () => `${BASE_URL}/api/ws`
 
 export const useIndividualRoom = defineStore('individualRoom', () => {
   const initialState: IndividualRoomState = {
@@ -78,7 +78,7 @@ export const useIndividualRoom = defineStore('individualRoom', () => {
   const connect = (roomId: string) => {
     // roomId をcookieにセット
     document.cookie = document.cookie + `roomID=${roomId};`
-    const ws = new WebSocket(websocketUrl(roomId))
+    const ws = new WebSocket(websocketUrl())
     ws.onopen = () => {
       console.log('connected')
       state.value = {
