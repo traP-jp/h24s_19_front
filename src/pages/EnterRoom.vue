@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import api, { EnterRoom } from '@/lib/apis'
-import router from '@/router';
+import router from '@/router'
 
 import { useStoreUser } from '@/stores/user'
 const store = useStoreUser()
@@ -18,12 +18,12 @@ const submitError = ref(false)
 const userSettingError = ref(false)
 const submit = async () => {
   const enterInfo: EnterRoom = {
-    "userName": userNickName.value,
-    "password": roomPassword.value
+    userName: userNickName.value,
+    password: roomPassword.value,
   }
   try {
     // enterRoom を送る
-    const resp = (await api.apiRoomRoomIdEnterPost(thisRoomId.value, enterInfo))
+    const resp = await api.apiRoomRoomIdEnterPost(thisRoomId.value, enterInfo)
     // ここで resp から userId と userName を持たせて IndividualRoom へ
     if (resp.status == 200) {
       submitError.value = false
@@ -31,9 +31,7 @@ const submit = async () => {
       userNickName.value = resp.data.userName
       const userId = resp.data.userId
       store.setUser(userNickName.value, userId)
-      router.push(
-        { path: `/rooms/${thisRoomId.value}` }
-      )
+      router.push({ path: `/rooms/${thisRoomId.value}` })
     } else {
       userSettingError.value = true
     }
@@ -44,45 +42,38 @@ const submit = async () => {
   }
 }
 
-onMounted(
-  () => {
-    const roomId = router.currentRoute.value.params.id
-    if (typeof roomId == 'string') {
-      thisRoomId.value = roomId
-    } else {
-      console.error("Invalid RoomId type")
-    }
-    const queryPassword = router.currentRoute.value.query['password']
-    if (typeof queryPassword == 'string') {
-      roomPassword.value = queryPassword
-    }
+onMounted(() => {
+  const roomId = router.currentRoute.value.params.id
+  if (typeof roomId == 'string') {
+    thisRoomId.value = roomId
+  } else {
+    console.error('Invalid RoomId type')
   }
-
-)
+  const queryPassword = router.currentRoute.value.query['password']
+  if (typeof queryPassword == 'string') {
+    roomPassword.value = queryPassword
+  }
+})
 </script>
 <template>
-  <h1>
-    部屋に入る
-  </h1>
+  <h1>部屋に入る</h1>
   <p>部屋ID: {{ thisRoomId }}</p>
   <p>この部屋で使うニックネームを設定してください。</p>
   <p>
     <label>
       ニックネーム
-      <input v-model="userNickName">
+      <input v-model="userNickName" />
     </label>
   </p>
   <p>
     <label>
       合言葉
-      <input v-model="roomPassword">
+      <input v-model="roomPassword" />
     </label>
   </p>
 
   <p>
-    <button @click="submit">
-      参加
-    </button>
+    <button @click="submit">参加</button>
   </p>
   <div v-if="userSettingError">
     <p>ニックネームが使用不可能。もしくは間違った合言葉です。</p>
